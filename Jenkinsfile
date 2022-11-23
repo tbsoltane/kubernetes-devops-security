@@ -20,6 +20,16 @@ pipeline {
                 jacoco execPattern: 'target/jacoco.exec'
               }
             }
-        }   
-    }
+      }
+
+     stage('Docker Build and Push') {
+       steps {
+         withDockerRegistry([credentialsId: "docker-hub-tbsoltane-creds", url: ""]) {
+           sh 'printenv'
+           sh 'sudo docker build -t tbsoltane/numeric-app:""$GIT_COMMIT"" .'
+           sh 'docker push tbsoltane/numeric-app:""$GIT_COMMIT""'
+         }
+       }
+     }   
+  }
 }
