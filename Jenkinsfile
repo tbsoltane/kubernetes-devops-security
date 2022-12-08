@@ -22,6 +22,21 @@ pipeline {
             }
       }
 
+
+       stage('SonarQube - SAST') {
+       steps {
+ #        withSonarQubeEnv('SonarQube') {
+           sh "mvn clean verify sonar:sonar -Dsonar.projectKey=test-app -Dsonar.host.url=http://ec2-54-80-83-245.compute-1.amazonaws.com:9000 -Dsonar.login=sqp_b414bc3e7a56eb932398aee7dd597134df482031"
+ #        }
+ #        timeout(time: 2, unit: 'MINUTES') {
+ #          script {
+ #            waitForQualityGate abortPipeline: true
+ #          }
+ #        }
+       }
+     }
+
+
      stage('Docker Build and Push') {
        steps {
          withDockerRegistry([credentialsId: "docker-hub-tbsoltane-creds", url: ""]) {
